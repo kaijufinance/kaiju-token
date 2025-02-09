@@ -8,6 +8,10 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/contr
 import "https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
 
 contract KaijuToken is Initializable, ERC20Upgradeable, OwnableUpgradeable, ERC20PermitUpgradeable, UUPSUpgradeable {
+    
+    event MintedEvent(address to, uint256 amount, uint256 time);
+    event BurnedEvent(address from, uint256 amount, uint256 time);
+    
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
@@ -19,15 +23,19 @@ contract KaijuToken is Initializable, ERC20Upgradeable, OwnableUpgradeable, ERC2
         __ERC20Permit_init(name);
         __UUPSUpgradeable_init();
 
-        _mint(msg.sender, initialSupply);
+        mint(msg.sender, initialSupply);
     }
     
     function mint(address to, uint256 amount) public onlyOwner {
         _mint(to, amount);
+
+        emit MintedEvent(to, amount, block.timestamp);
     }
 
     function burn(uint256 amount) public {
         _burn(msg.sender, amount);
+
+        emit BurnedEvent(msg.sender, amount, block.timestamp);
     }
 
     function burnFrom(address account, uint256 amount) public {
@@ -39,6 +47,8 @@ contract KaijuToken is Initializable, ERC20Upgradeable, OwnableUpgradeable, ERC2
         }
 
         _burn(account, amount);
+
+        emit BurnedEvent(account, amount, block.timestamp);
     }
 
     function _authorizeUpgrade(address newImplementation)
