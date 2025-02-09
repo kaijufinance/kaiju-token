@@ -16,7 +16,7 @@ contract KaijuToken is Initializable, ERC20Upgradeable, OwnableUpgradeable, ERC2
     function initialize(string memory name, string memory symbol, address initialOwner, uint256 initialSupply) initializer public {
         __ERC20_init(name, symbol);
         __Ownable_init(initialOwner);
-        __ERC20Permit_init("MyToken");
+        __ERC20Permit_init(name);
         __UUPSUpgradeable_init();
 
         _mint(msg.sender, initialSupply);
