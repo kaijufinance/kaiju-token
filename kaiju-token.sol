@@ -36,7 +36,7 @@ contract KaijuToken is Initializable, ERC20Upgradeable, AccessControlUpgradeable
         _mint(initialOwner, initialSupply);
     }
     
-    function mint(address to, uint256 amount) public onlyOwner {
+    function mint(address to, uint256 amount) public onlyRole(MINTER_ROLE) {
         _mint(to, amount);
         emit MintedEvent(to, amount, block.timestamp);
     }
